@@ -1,0 +1,29 @@
+
+#----------------------------------------------------------------------
+#           SETTINGS FOR YOUR PACKAGE
+#----------------------------------------------------------------------
+
+# Package name for your
+PKG_NAME            := bien-monsieur
+PKG_VERS            := 1.0.0
+PKG_DESC            := Modules for building your own Eliom application
+
+# Source files
+SRC_FILES        := $(wildcard src/*.eliom*)
+
+##----------------------------------------------------------------------
+
+# OCamlfind packages for the server
+SERVER_PACKAGES    := lwt.ppx safepass pgocaml
+
+# OCamlfind packages for the client
+CLIENT_PACKAGES    := lwt.ppx safepass pgocaml
+
+# Debug package (yes/no): Debugging info in compilation
+DEBUG              := yes
+
+# Native mode (yes/no): Compile also with native mode (it will always compile with byte mode)
+NATIVE             := yes
+
+# Package's library $(PKG_NAME).{client,server}.cma (a,cmxa,cmxs only server side)
+LIBDIR             := lib/
