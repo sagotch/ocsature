@@ -131,23 +131,25 @@ META: META.in
 CLIENT_CMI=$(wildcard $(addsuffix /BM*.cmi,$(addprefix $(ELIOM_CLIENT_DIR)/,$(CLIENT_DIRS))))
 SERVER_CMI=$(wildcard $(addsuffix /BM*.cmi,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
 SERVER_CMX=$(wildcard $(addsuffix /BM*.cmx,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
+TMPL_DST=`eliom-distillery -dir`/bien-monsieur
+
 install: all META
 	$(OCAMLFIND) install $(PKG_NAME) META
 	mkdir -p $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client
 	mkdir -p $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server
-	cp $(CLIENT_CMO) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client
-	cp $(CLIENT_CMI) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client
-	cp $(SERVER_CMI) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server
-	cp $(SERVER_CMX) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server
+	[ ! -z "$(CLIENT_CMI)" ] && cp $(CLIENT_CMI) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client || true
+	[ ! -z "$(CLIENT_CMO)" ] && cp $(CLIENT_CMO) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client || true
+	[ ! -z "$(SERVER_CMI)" ] && cp $(SERVER_CMI) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server || true
+	[ ! -z "$(SERVER_CMX)" ] && cp $(SERVER_CMX) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server || true
 	cp $(LIBDIR)/$(PKG_NAME).client.cma $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client
 	cp $(LIBDIR)/$(PKG_NAME).server.cm* $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server
-	cp -R ./distillery `eliom-distillery -dir`/bien-monsieur
+	cp -R ./distillery $(TMPL_DST)
 
 uninstall:
 	rm -rf $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client
 	rm -rf $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server
 	$(OCAMLFIND) remove $(PKG_NAME)
-	rm -rf `eliom-distillery -dir`/bien-monsieur
+	rm -rf $(TMPL_DST)
 
 reinstall:
 	$(MAKE) uninstall
