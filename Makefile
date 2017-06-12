@@ -39,7 +39,7 @@ endif
 ##----------------------------------------------------------------------
 ## General
 
-.PHONY: all byte opt
+.PHONY: all byte opt distillery
 all: byte $(OPT_RULE)
 byte:: $(LIBDIR)/${PKG_NAME}.server.cma $(LIBDIR)/${PKG_NAME}.client.cma
 opt:: $(LIBDIR)/${PKG_NAME}.server.cmxs
@@ -141,11 +141,13 @@ install: all META
 	cp $(SERVER_CMX) $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server
 	cp $(LIBDIR)/$(PKG_NAME).client.cma $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client
 	cp $(LIBDIR)/$(PKG_NAME).server.cm* $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server
+	cp -R ./distillery `eliom-distillery -dir`/bien-monsieur
 
 uninstall:
 	rm -rf $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/client
 	rm -rf $(OCAMLFIND_DESTDIR)/$(PKG_NAME)/server
 	$(OCAMLFIND) remove $(PKG_NAME)
+	rm -rf `eliom-distillery -dir`/bien-monsieur
 
 reinstall:
 	$(MAKE) uninstall
