@@ -131,7 +131,7 @@ META: META.in
 CLIENT_CMI=$(wildcard $(addsuffix /BM*.cmi,$(addprefix $(ELIOM_CLIENT_DIR)/,$(CLIENT_DIRS))))
 SERVER_CMI=$(wildcard $(addsuffix /BM*.cmi,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
 SERVER_CMX=$(wildcard $(addsuffix /BM*.cmx,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
-TMPL_DST=`eliom-distillery -dir`/bien-monsieur
+TMPL_DST=`eliom-distillery -dir`/$(TEMPLATE_NAME)
 
 install: all META
 	$(OCAMLFIND) install $(PKG_NAME) META
@@ -193,3 +193,18 @@ clean:
 
 distclean: clean
 	-rm -rf $(DEPSDIR) .depend
+
+##----------------------------------------------------------------------
+## Testing
+
+test-template: clean
+	initwd=`pwd` \
+	&& opam pin add $(PKG_NAME) . -n -y \
+	&& opam reinstall -y $(PKG_NAME) \
+	&& cd `echo $${TMPDIR-/tmp}` \
+	&& rm -rf $(TEST_PROJECT) \
+	&& mkdir $(TEST_PROJECT) \
+	&& eliom-distillery -name $(TEST_PROJECT) -template $(TEMPLATE_NAME) -target-directory $(TEST_PROJECT) \
+	&& cd $(TEST_PROJECT) \
+	&& make test.byte \
+	&& cd $$initwd || (cd $$initwd && exit 1)

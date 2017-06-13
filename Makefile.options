@@ -27,3 +27,9 @@ NATIVE             := yes
 
 # Package's library $(PKG_NAME).{client,server}.cma (a,cmxa,cmxs only server side)
 LIBDIR             := lib/
+
+##----------------------------------------------------------------------
+
+TEST_PROJECT := bmtest
+
+TEMPLATE_NAME := bien-monsieur
