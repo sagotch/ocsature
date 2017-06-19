@@ -48,6 +48,7 @@ opt:: $(LIBDIR)/${PKG_NAME}.server.cmxs
 ## Aux
 
 objs=$(patsubst %.eliom,$(1)/%.$(2),$(filter %.eliom,$(3)))
+eliomdep=$(shell $(ELIOMDEP) $(1) -ppx -sort $(2) $(filter %.eliom %.ml,$(3))))
 depsort=$(call objs,$(1),$(2),$(call eliomdep,$(3),$(4),$(5)))
 
 $(LIBDIR):
