@@ -9,7 +9,7 @@ PKG_VERS            := 1.0.0
 PKG_DESC            := Modules for building your own Eliom application
 
 # Source files
-SRC_FILES        := $(wildcard src/*.eliom*)
+SRC_FILES        := $(wildcard src/*.eliom src/*.eliomi)
 
 ##----------------------------------------------------------------------
 
