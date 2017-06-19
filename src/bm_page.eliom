@@ -10,7 +10,10 @@ let%shared js_ uri = js_script ~a:[ a_defer () ] ~uri:(make_uri uri) ()
 
 let%shared css_ uri = css_link ~uri:(make_uri uri) ()
 
-let%shared page ?a ?(js = []) ?(css = []) ~title:t content =
+let%shared page ?a ?(js = []) ?(css = []) ~title:t ?(head = []) content =
   let head =
-    head (title @@ pcdata t) @@ (List.map js_ js @ List.map css_ css) in
+    Eliom_content.Html.F.head (title @@ pcdata t) @@
+    List.rev_append
+      (List.map js_ js @ List.rev_map css_ css)
+      head in
   html ?a head (body content)
