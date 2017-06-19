@@ -59,7 +59,6 @@ $(LIBDIR):
 
 ## make it more elegant ?
 SERVER_DIRS     := $(shell echo $(foreach f, $(SRC_FILES), $(dir $(f))) |  tr ' ' '\n' | sort -u | tr '\n' ' ')
-SERVER_DEP_DIRS := ${addprefix -eliom-inc ,${SERVER_DIRS}}
 SERVER_INC_DIRS := ${addprefix -I $(ELIOM_SERVER_DIR)/, ${SERVER_DIRS}}
 
 SERVER_INC  := ${addprefix -package ,${SERVER_PACKAGES}}
@@ -93,7 +92,6 @@ ${ELIOM_SERVER_DIR}/%.cmx: %.eliom
 
 ## make it more elegant ?
 CLIENT_DIRS     := $(shell echo $(foreach f, $(SRC_FILES), $(dir $(f))) |  tr ' ' '\n' | sort -u | tr '\n' ' ')
-CLIENT_DEP_DIRS := ${addprefix -eliom-inc ,${CLIENT_DIRS}}
 CLIENT_INC_DIRS := ${addprefix -I $(ELIOM_CLIENT_DIR)/,${CLIENT_DIRS}}
 
 CLIENT_LIBS := ${addprefix -package ,${CLIENT_PACKAGES}}
@@ -129,9 +127,9 @@ META: META.in
 		-e 's#@@SERVER_ARCHIVES_NATIVE_PLUGIN@@#$(PKG_NAME).server.cmxs#g' \
 		$< > $@
 
-CLIENT_CMI=$(wildcard $(addsuffix /BM*.cmi,$(addprefix $(ELIOM_CLIENT_DIR)/,$(CLIENT_DIRS))))
-SERVER_CMI=$(wildcard $(addsuffix /BM*.cmi,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
-SERVER_CMX=$(wildcard $(addsuffix /BM*.cmx,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
+CLIENT_CMI=$(wildcard $(addsuffix /bm*.cmi,$(addprefix $(ELIOM_CLIENT_DIR)/,$(CLIENT_DIRS))))
+SERVER_CMI=$(wildcard $(addsuffix /bm*.cmi,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
+SERVER_CMX=$(wildcard $(addsuffix /bm*.cmx,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
 TMPL_DST=`eliom-distillery -dir`/$(TEMPLATE_NAME)
 
 install: all META
@@ -173,10 +171,10 @@ endif
 	cat $^ > $@
 
 $(DEPSDIR)/%.server: % | $(DEPSDIR)
-	$(ELIOMDEP) -server -ppx $(SERVER_INC) $(SERVER_DEP_DIRS) $< > $@
+	$(ELIOMDEP) -server -ppx $(SERVER_INC) -eliom-inc $(SERVER_DIRS) $< > $@
 
 $(DEPSDIR)/%.client: % | $(DEPSDIR)
-	$(ELIOMDEP) -client -ppx $(CLIENT_INC) $(CLIENT_DEP_DIRS) $< > $@
+	$(ELIOMDEP) -client -ppx $(CLIENT_INC) -eliom-inc $(CLIENT_DIRS) $< > $@
 
 $(DEPSDIR):
 	mkdir -p $@
