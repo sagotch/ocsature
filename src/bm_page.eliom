@@ -14,6 +14,6 @@ let%shared page ?a ?(js = []) ?(css = []) ~title:t ?(head = []) content =
   let head =
     Eliom_content.Html.F.head (title @@ pcdata t) @@
     List.rev_append
-      (List.map js_ js @ List.rev_map css_ css)
+      (List.rev_append (List.map css_ css) (List.rev_map js_ js))
       head in
   html ?a head (body content)
