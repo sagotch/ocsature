@@ -213,26 +213,6 @@ module Make (In : Make_in) = struct
        | None -> Lwt.return_none)
     | Some uid -> Lwt.return_some uid
 
-  (** The connection wrapper checks whether the user is connected,
-      and calls the page generator accordingly.
-      It is usually recommended to have both a connected and non-connected
-      version of each page. By default, the non-connected version
-      will display a connection form.
-
-      If connected, [gen_wrapper connected non_connected gp pp]
-      calls the [connected] function given as parameters,
-      taking user id, GET parameters [gp] and POST parameters [pp].
-
-      If not, it calls the [not_connected] function.
-
-      If we are launching a new client side process,
-      functions [on_start_process] is called,
-      and also [on_start_connected_process] if connected.
-
-      If [allow] or [deny] are present, it will check that the user belongs
-      or not to these groups, and call function [deny_fun] otherwise.
-      By default, it raises [Permission_denied].
-  *)
   let wrapper fn gp pp =
     let new_process = Eliom_reference.Volatile.get new_process_eref in
     let%lwt uid = get_session () in
