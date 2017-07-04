@@ -16,5 +16,5 @@ let main_service =
 let () =
   %%%MODULE_NAME%%%_app.register ~service:main_service @@ fun () () ->
   let head = head (title @@ pcdata "%%%PROJECT_NAME%%%") [] in
-  let body = body [ h1 [ pcdata "Welcome to \"Bien, monsieur.\" template!" ] ] in
+  let body = body [ h1 [ pcdata "Welcome to \"Ocsature.\" template!" ] ] in
   Lwt.return @@ html head body

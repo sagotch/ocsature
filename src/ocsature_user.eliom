@@ -1,5 +1,5 @@
-(* Bien, monsieur !
- * http://github.com/sagotch/bien-monsieur
+(* Ocsature
+ * http://github.com/sagotch/ocsature
  *
  * Copyright (C)
  *   2017 - Julien Sagot
@@ -41,7 +41,7 @@ module type TableConfig = sig
   val user_table_userid : string
   val user_table_signature : string
   val user_table_password : string
-  val user_of_row : Bm_db.PGOCaml.row -> user
+  val user_of_row : Ocsature_db.PGOCaml.row -> user
 end
 
 module DefaultUserTable = struct
@@ -59,7 +59,7 @@ module DefaultUserTable = struct
     | _ -> assert false
 end
 
-module Make (DB : Bm_db.Bm_db_out) (T : TableConfig) = struct
+module Make (DB : Ocsature_db.Ocsature_db_out) (T : TableConfig) = struct
 
   type user = T.user
   type userid = T.userid
@@ -92,7 +92,7 @@ module Make (DB : Bm_db.Bm_db_out) (T : TableConfig) = struct
          VALUES ($1,$2)
          RETURNING " ^ T.user_table_userid ^ "")
         [ Some signature
-        ; Eliom_lib.Option.map Bm_password.crypt password ]
+        ; Eliom_lib.Option.map Ocsature_password.crypt password ]
       |> Lwt.map (fun [ Some userid ] -> T.userid_of_string userid)
         [@ocaml.warning "-8"]
 
@@ -103,7 +103,7 @@ module Make (DB : Bm_db.Bm_db_out) (T : TableConfig) = struct
         ("UPDATE " ^ T.user_table ^ "
           SET " ^ T.user_table_password ^ " = $1
           WHERE " ^ T.user_table_userid ^ " = $2")
-        [ Some (Bm_password.crypt password)
+        [ Some (Ocsature_password.crypt password)
         ; Some (T.userid_to_string userid) ]
 
   let verify_password ~signature ~password =
@@ -116,9 +116,9 @@ module Make (DB : Bm_db.Bm_db_out) (T : TableConfig) = struct
         [ Some signature ]
         (function
           | [ [ Some userid ; Some p ] ]
-            when Bm_password.verify password p ->
+            when Ocsature_password.verify password p ->
             Lwt.return (T.userid_of_string userid)
-          | _ -> Lwt.fail Bm_db.No_such_resource)
+          | _ -> Lwt.fail Ocsature_db.No_such_resource)
 
   let user_of_userid userid =
     DB.WithoutTransaction.one
@@ -131,7 +131,7 @@ module Make (DB : Bm_db.Bm_db_out) (T : TableConfig) = struct
     try%lwt
       let%lwt userid = userid_of_signature signature in
       Lwt.fail (Already_exists userid)
-    with Bm_db.No_such_resource ->
+    with Ocsature_db.No_such_resource ->
       let%lwt userid = create ?password signature in
       user_of_userid userid
 

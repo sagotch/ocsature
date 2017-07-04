@@ -1,5 +1,5 @@
-(* Bien, monsieur !
- * http://github.com/sagotch/bien-monsieur
+(* Ocsature
+ * http://github.com/sagotch/ocsature
  *
  * Copyright (C)
  *   2017 - Julien Sagot
@@ -36,7 +36,7 @@ module PGOCaml = PGOCaml_generic.Make(struct
     type in_channel = Lwt_io.input_channel
   end)
 
-module type Bm_db_in = sig
+module type Ocsature_db_in = sig
   val host : string option
   val port : int option
   val user : string option
@@ -86,12 +86,12 @@ module Db_query (F : Db_query_in) : Db_query_out = struct
 
 end
 
-module type Bm_db_out = sig
+module type Ocsature_db_out = sig
   module WithTransaction : Db_query_out
   module WithoutTransaction : Db_query_out
 end
 
-module Make (A : Bm_db_in) = struct
+module Make (A : Ocsature_db_in) = struct
 
   let connect () =
     PGOCaml.connect

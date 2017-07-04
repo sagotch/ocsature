@@ -1,5 +1,5 @@
-(* Bien, monsieur !
- * http://github.com/sagotch/bien-monsieur
+(* Ocsature
+ * http://github.com/sagotch/ocsature
  *
  * Copyright (C)
  *   2017 - Julien Sagot
@@ -100,7 +100,7 @@ module Make : functor (In : Make_in) -> sig
       If no user is connected, the service will fail by raising [Not_connected].
       Otherwise it calls function [f].
       To provide another behaviour in case the user is not connected,
-      have a look at {!Opt.connected_fun} or module {!Bm_page}.
+      have a look at {!Opt.connected_fun} or module {!Ocsature_page}.
 
       No security check is done.
 

@@ -1,5 +1,5 @@
-(* Bien, monsieur !
- * http://github.com/sagotch/bien-monsieur
+(* Ocsature
+ * http://github.com/sagotch/ocsature
  *
  * Copyright (C)
  *   2017 - Julien Sagot
@@ -51,11 +51,11 @@ module type TableConfig = sig
   val user_table_userid : string
   val user_table_signature : string
   val user_table_password : string
-  val user_of_row : Bm_db.PGOCaml.row -> user
+  val user_of_row : Ocsature_db.PGOCaml.row -> user
 end
 
 module DefaultUserTable : TableConfig
 
-module Make : functor (_ : Bm_db.Bm_db_out) (T : TableConfig) ->
+module Make : functor (_ : Ocsature_db.Ocsature_db_out) (T : TableConfig) ->
   Make_out with type user = T.user
             and type userid = T.userid

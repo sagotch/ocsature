@@ -1,9 +1,9 @@
 opam-version: "1.2"
 authors: "ju.sagot@gmail.com"
 maintainer: "ju.sagot@gmail.com"
-homepage: "https://github.com/sagotch/bien-monsieur/"
-bug-reports: "https://github.com/sagotch/bien-monsieur/issues"
-dev-repo: "https://github.com/sagotch/bien-monsieur.git"
+homepage: "https://github.com/sagotch/ocsature/"
+bug-reports: "https://github.com/sagotch/ocsature/issues"
+dev-repo: "https://github.com/sagotch/ocsature.git"
 version: "dev"
 build: [ make "-j%{jobs}%" ]
 install: [ make "install" ]

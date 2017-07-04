@@ -1,5 +1,5 @@
-(* Bien, monsieur !
- * http://github.com/sagotch/bien-monsieur
+(* Ocsature
+ * http://github.com/sagotch/ocsature
  *
  * Copyright (C)
  *   2017 - Julien Sagot

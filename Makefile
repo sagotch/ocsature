@@ -127,9 +127,9 @@ META: META.in
 		-e 's#@@SERVER_ARCHIVES_NATIVE_PLUGIN@@#$(PKG_NAME).server.cmxs#g' \
 		$< > $@
 
-CLIENT_CMI=$(wildcard $(addsuffix /bm*.cmi,$(addprefix $(ELIOM_CLIENT_DIR)/,$(CLIENT_DIRS))))
-SERVER_CMI=$(wildcard $(addsuffix /bm*.cmi,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
-SERVER_CMX=$(wildcard $(addsuffix /bm*.cmx,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
+CLIENT_CMI=$(wildcard $(addsuffix /ocsature.*cmi,$(addprefix $(ELIOM_CLIENT_DIR)/,$(CLIENT_DIRS))))
+SERVER_CMI=$(wildcard $(addsuffix /ocsature.*cmi,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
+SERVER_CMX=$(wildcard $(addsuffix /ocsature.*cmx,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
 TMPL_DST=`eliom-distillery -dir`/$(TEMPLATE_NAME)
 
 install: all META

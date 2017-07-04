@@ -4,7 +4,7 @@
 #----------------------------------------------------------------------
 
 # Package name for your
-PKG_NAME            := bien-monsieur
+PKG_NAME            := ocsature
 PKG_VERS            := 1.0.0
 PKG_DESC            := Modules for building your own Eliom application
 
@@ -32,4 +32,4 @@ LIBDIR             := lib/
 
 TEST_PROJECT := bmtest
 
-TEMPLATE_NAME := bien-monsieur
+TEMPLATE_NAME := ocsature

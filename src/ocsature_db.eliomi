@@ -1,5 +1,5 @@
-(* Bien, monsieur !
- * http://github.com/sagotch/bien-monsieur
+(* Ocsature
+ * http://github.com/sagotch/ocsature
  *
  * Copyright (C)
  *   2017 - Julien Sagot
@@ -33,7 +33,7 @@ module type Db_query_out = sig
   val not_exists : string -> param list -> bool Lwt.t
 end
 
-module type Bm_db_in = sig
+module type Ocsature_db_in = sig
   val host : string option
   val port : int option
   val user : string option
@@ -43,9 +43,9 @@ module type Bm_db_in = sig
   val pool_size : int
 end
 
-module type Bm_db_out = sig
+module type Ocsature_db_out = sig
   module WithTransaction : Db_query_out
   module WithoutTransaction : Db_query_out
 end
 
-module Make (A : Bm_db_in) : Bm_db_out
+module Make (A : Ocsature_db_in) : Ocsature_db_out
