@@ -3,7 +3,7 @@ open%shared Eliom_content.Html.D
 module %%%MODULE_NAME%%%_app =
   Eliom_registration.App
     (struct
-      let application_name = "%%%MODULE_NAME%%%"
+      let application_name = "%%%APPNAME%%%"
       let global_data_path = None
     end)
 
