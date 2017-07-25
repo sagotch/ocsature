@@ -28,9 +28,9 @@ module type Make_in = sig
   val of_string : string -> t
 end
 
-module Make : functor (In : Make_in) -> sig
+module type Make_out = sig
 
-  type t = In.t
+  type t
 
   (** Connection and disconnection of users,
       restrict access to services or server functions,
@@ -115,3 +115,5 @@ module Make : functor (In : Make_in) -> sig
   end
 
 end
+
+module Make : functor (In : Make_in) -> Make_out with type t = In.t

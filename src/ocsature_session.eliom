@@ -30,28 +30,28 @@ module type Make_in = sig
   val of_string : string -> t
 end
 
-(* module type Make_out = sig *)
-(*   type t *)
-(*   val on_start_process : (unit -> unit Lwt.t) -> unit *)
-(*   val on_start_connected_process : (t -> unit Lwt.t) -> unit *)
-(*   val on_connected_request : (t -> unit Lwt.t) -> unit *)
-(*   val on_open_session : (t -> unit Lwt.t) -> unit *)
-(*   val on_pre_close_session : (unit -> unit Lwt.t) -> unit *)
-(*   val on_post_close_session : (unit -> unit Lwt.t) -> unit *)
-(*   val on_request : (unit -> unit Lwt.t) -> unit *)
-(*   val on_denied_request : (t option -> unit Lwt.t) -> unit *)
-(*   val user_indep_state_hierarchy : Eliom_common.scope_hierarchy *)
-(*   val user_indep_process_scope : Eliom_common.client_process_scope *)
-(*   val user_indep_session_scope : Eliom_common.session_scope *)
-(*   val connect : ?expire:bool -> t -> unit Lwt.t *)
-(*   val disconnect : unit -> unit Lwt.t *)
-(*   val session_fun : ('a -> 'b -> 'c Lwt.t) -> ('a -> 'b -> 'c Lwt.t) *)
-(*   val session_rpc : ('a -> 'c Lwt.t) -> ('a -> 'c Lwt.t) *)
-(*   module Current : sig *)
-(*     val get : unit -> t *)
-(*     val get_o : unit -> t option *)
-(*   end *)
-(* end *)
+module type Make_out = sig
+  type t
+  val on_start_process : (unit -> unit Lwt.t) -> unit
+  val on_start_connected_process : (t -> unit Lwt.t) -> unit
+  val on_connected_request : (t -> unit Lwt.t) -> unit
+  val on_open_session : (t -> unit Lwt.t) -> unit
+  val on_pre_close_session : (unit -> unit Lwt.t) -> unit
+  val on_post_close_session : (unit -> unit Lwt.t) -> unit
+  val on_request : (unit -> unit Lwt.t) -> unit
+  val on_denied_request : (t option -> unit Lwt.t) -> unit
+  val user_indep_state_hierarchy : Eliom_common.scope_hierarchy
+  val user_indep_process_scope : Eliom_common.client_process_scope
+  val user_indep_session_scope : Eliom_common.session_scope
+  val connect : ?expire:bool -> t -> unit Lwt.t
+  val disconnect : unit -> unit Lwt.t
+  val session_fun : ('a -> 'b -> 'c Lwt.t) -> ('a -> 'b -> 'c Lwt.t)
+  val session_rpc : ('a -> 'c Lwt.t) -> ('a -> 'c Lwt.t)
+  module Current : sig
+    val get : unit -> t
+    val get_o : unit -> t option
+  end
+end
 
 module Make (In : Make_in) = struct
 
