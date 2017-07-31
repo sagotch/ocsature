@@ -54,7 +54,9 @@ module type TableConfig = sig
   val user_of_row : Ocsature_db.PGOCaml.row -> user
 end
 
-module DefaultUserTable : TableConfig
+module DefaultUserTable : TableConfig with
+  type user = (int64 * string)
+  and type userid = int64
 
 module Make : functor (_ : Ocsature_db.Ocsature_db_out) (T : TableConfig) ->
   Make_out with type user = T.user
