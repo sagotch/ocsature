@@ -44,6 +44,9 @@ module type TableConfig = sig
   val user_of_row : Ocsature_db.PGOCaml.row -> user
 end
 
+(* Needs a [user_table] table row starts with userid and signature as
+   firsts columns. *)
+
 module DefaultUserTable = struct
   type user = (int64 * string)
   type userid = int64
@@ -54,7 +57,7 @@ module DefaultUserTable = struct
   let user_table_signature = "signature"
   let user_table_password = "password"
   let user_of_row = function
-    | [ Some userid ; Some signature ] ->
+    | Some userid :: Some signature :: _ ->
       (userid_of_string userid, signature)
     | _ -> assert false
 end
