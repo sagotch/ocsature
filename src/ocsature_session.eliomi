@@ -117,3 +117,22 @@ module type Make_out = sig
 end
 
 module Make : functor (In : Make_in) -> Make_out with type t = In.t
+
+[%%client.start]
+
+module type Make_in = sig
+  type t
+end
+
+module type Make_out = sig
+  type t
+  module Current : sig
+    val get : unit -> t
+    val get_o : unit -> t option
+    val set : t -> unit
+    val unset : unit -> unit
+  end
+  val session_fun : ('a -> 'b -> 'c Lwt.t) -> ('a -> 'b -> 'c Lwt.t)
+end
+
+module Make : functor (In : Make_in) -> Make_out with type t = In.t

@@ -74,7 +74,6 @@ module Make (In : Make_in) = struct
       match Eliom_reference.Volatile.get current_ref with
       | Some a -> a
       | None -> raise Not_connected
-
   end
 
   let user_indep_state_hierarchy =
@@ -242,4 +241,33 @@ module Make (In : Make_in) = struct
 
   let session_rpc fn pp =  wrapper (fun _ -> fn) () pp
 
+end
+
+[%%client.start]
+
+module type Make_in = sig
+  type t
+end
+
+module type Make_out = sig
+  type t
+  module Current : sig
+    val get : unit -> t
+    val get_o : unit -> t option
+    val set : t -> unit
+    val unset : unit -> unit
+  end
+  val session_fun : ('a -> 'b -> 'c Lwt.t) -> ('a -> 'b -> 'c Lwt.t)
+end
+
+module Make (In : Make_in) = struct
+  type t = In.t
+  module Current = struct
+    let current_ref : t option ref = ref None
+    let get () = match !current_ref with Some x -> x | _ -> assert false
+    let get_o () = !current_ref
+    let set u = current_ref := Some u
+    let unset () = current_ref := None
+  end
+  let session_fun fn gp pp = fn gp pp
 end
