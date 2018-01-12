@@ -107,8 +107,11 @@ module Make (A : Ocsature_db_in) = struct
     try%lwt let%lwt () = PGOCaml.ping db in Lwt.return_true
     with _ -> Lwt.return_false
 
+  let dispose db =
+    Lwt.catch (fun () -> PGOCaml.close db) (fun _ -> Lwt.return_unit)
+
   let pool : (string, bool) Hashtbl.t PGOCaml.t Lwt_pool.t =
-    Lwt_pool.create A.pool_size ~validate connect
+    Lwt_pool.create A.pool_size ~validate ~dispose connect
 
   let with_transaction f =
     Lwt_pool.use pool @@ fun db ->
