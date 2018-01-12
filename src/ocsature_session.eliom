@@ -121,7 +121,7 @@ module Make (In : Make_in) = struct
     ((fun f ->
         let oldf = !r in
         r := (fun () -> let%lwt () = oldf () in f ())),
-     (fun userid -> !r userid))
+     (fun () -> !r ()))
 
   (* Call this to add an action to be done just after openning a session *)
   let (on_open_session, open_session_action) =
