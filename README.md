@@ -11,8 +11,8 @@ the french word for *backbone*. I cannot help but make bad puns. Sorry.
 
 ## Sync with [Ocsigen Start]
 
-Synced with commit 69f24fe28e436a212c9bcf5a017ff4ee98205b83
-(May 9, 2017)
+Synced with commit 9b6081b125260f69a0683db93a95cbea71b802ef
+(Jan 12, 2018)
 
 [Ocsature]: http://github.com/sagotch/ocsature
 [Eliom]: http://www.ocsigen.org/eliom
