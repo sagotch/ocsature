@@ -115,8 +115,15 @@ module Make (A : Ocsature_db_in) = struct
   let pool : (string, bool) Hashtbl.t PGOCaml.t Lwt_pool.t =
     Lwt_pool.create A.pool_size ~validate ~dispose connect
 
-  let with_transaction f =
+  let use_pool f =
     Lwt_pool.use pool @@ fun db ->
+    try%lwt f db
+    with PGOCaml.Error msg as e ->
+      Lwt_log.ign_error_f ~section "postgresql protocol error: %s" msg ;
+      let%lwt () = PGOCaml.close db in Lwt.fail e
+
+  let with_transaction f =
+    use_pool @@ fun db ->
     let%lwt () = PGOCaml.begin_work db in
     try%lwt
       let%lwt r = f db in
@@ -134,7 +141,7 @@ module Make (A : Ocsature_db_in) = struct
       in
       Lwt.fail e
 
-  let without_transaction f = Lwt_pool.use pool (fun db -> f db)
+  let without_transaction f = use_pool (fun db -> f db)
 
   module WithTransaction = Db_query(struct let f = with_transaction end)
   module WithoutTransaction = Db_query(struct let f = without_transaction end)
