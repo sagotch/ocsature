@@ -35,6 +35,7 @@ module type Make_out = sig
   val on_start_process : (unit -> unit Lwt.t) -> unit
   val on_start_connected_process : (t -> unit Lwt.t) -> unit
   val on_connected_request : (t -> unit Lwt.t) -> unit
+  val on_unconnected_request : (unit -> unit Lwt.t) -> unit
   val on_open_session : (t -> unit Lwt.t) -> unit
   val on_pre_close_session : (unit -> unit Lwt.t) -> unit
   val on_post_close_session : (unit -> unit Lwt.t) -> unit
@@ -112,6 +113,14 @@ module Make (In : Make_in) = struct
     ((fun f ->
        let oldf = !r in
        r := (fun userid -> let%lwt () = oldf userid in f userid)),
+     (fun userid -> !r userid))
+
+  (* Call this to add an action to be done at each unconnected request *)
+  let (on_unconnected_request, unconnected_request_action) =
+    let r = ref (fun () -> Lwt.return_unit) in
+    ((fun f ->
+        let oldf = !r in
+        r := (fun () -> let%lwt () = oldf () in f ())),
      (fun userid -> !r userid))
 
   (* Call this to add an action to be done just after openning a session *)
@@ -233,7 +242,7 @@ module Make (In : Make_in) = struct
     in
     let%lwt () =
       match uid with
-      | None -> Lwt.return_unit
+      | None -> unconnected_request_action ()
       | Some id -> connected_request_action id in
     fn gp pp
 

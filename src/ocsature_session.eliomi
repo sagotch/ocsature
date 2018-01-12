@@ -48,6 +48,10 @@ module type Make_out = sig
       The function takes the user id as parameter. *)
   val on_connected_request : (t -> unit Lwt.t) -> unit
 
+  (** Call this to add an action to be done at each connected request.
+      The function takes the user id as parameter. *)
+  val on_unconnected_request : (unit -> unit Lwt.t) -> unit
+
   (** Call this to add an action to be done just after opening a session
       The function takes the user id as parameter. *)
   val on_open_session : (t -> unit Lwt.t) -> unit
