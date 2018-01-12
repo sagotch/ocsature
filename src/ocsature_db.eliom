@@ -93,6 +93,8 @@ end
 
 module Make (A : Ocsature_db_in) = struct
 
+  let section = Lwt_log.Section.make "ocsature_db"
+
   let connect () =
     PGOCaml.connect
       ?host:A.host
@@ -121,7 +123,15 @@ module Make (A : Ocsature_db_in) = struct
       let%lwt () = PGOCaml.commit db in
       Lwt.return r
     with e ->
-      let%lwt () = PGOCaml.rollback db in
+      let%lwt () =
+        try%lwt
+          PGOCaml.rollback db
+        with PGOCaml.PostgreSQL_Error _ ->
+          (* If the rollback fails, for instance due to a timeout,
+             it seems better to close the connection. *)
+          Lwt_log.ign_error ~section "rollback failed" ;
+          PGOCaml.close db
+      in
       Lwt.fail e
 
   let without_transaction f = Lwt_pool.use pool (fun db -> f db)
