@@ -89,80 +89,50 @@ module Make (In : Make_in) = struct
       ~scope:user_indep_process_scope
       true
 
+  let handler_action init =
+    let r = ref init in
+    ((fun f ->
+        let oldf = !r in
+        r := (fun x -> let%lwt () = oldf x in f x)),
+     (fun x -> !r x))
+
   (* Call this to add an action to be done on server side
      when the process starts *)
   let (on_start_process, start_process_action) =
-    let r = ref Lwt.return in
-    ((fun f ->
-       let oldf = !r in
-       r := (fun () -> let%lwt () = oldf () in f ())),
-     (fun () -> !r ()))
+    handler_action Lwt.return
 
   (* Call this to add an action to be done
      when the process starts in connected mode, or when the user logs in *)
   let (on_start_connected_process, start_connected_process_action) =
-    let r = ref (fun x -> Current.set x ; Lwt.return_unit) in
-    ((fun f ->
-       let oldf = !r in
-       r := (fun userid -> let%lwt () = oldf userid in f userid)),
-     (fun userid -> !r userid))
+    handler_action (fun x -> Current.set x ; Lwt.return_unit)
 
   (* Call this to add an action to be done at each connected request *)
   let (on_connected_request, connected_request_action) =
-    let r = ref (fun x -> Current.set x ; Lwt.return_unit) in
-    ((fun f ->
-       let oldf = !r in
-       r := (fun userid -> let%lwt () = oldf userid in f userid)),
-     (fun userid -> !r userid))
+    handler_action (fun x -> Current.set x ; Lwt.return_unit)
 
   (* Call this to add an action to be done at each unconnected request *)
   let (on_unconnected_request, unconnected_request_action) =
-    let r = ref (fun () -> Lwt.return_unit) in
-    ((fun f ->
-        let oldf = !r in
-        r := (fun () -> let%lwt () = oldf () in f ())),
-     (fun () -> !r ()))
+    handler_action Lwt.return
 
   (* Call this to add an action to be done just after openning a session *)
   let (on_open_session, open_session_action) =
-    let r = ref (fun _ -> Lwt.return_unit) in
-    ((fun f ->
-       let oldf = !r in
-       r := (fun userid -> let%lwt () = oldf userid in f userid)),
-     (fun userid -> !r userid))
+    handler_action (fun _ -> Lwt.return_unit)
 
   (* Call this to add an action to be done just after closing the session *)
   let (on_post_close_session, post_close_session_action) =
-    let r = ref (fun _ -> Lwt.return_unit) in
-    ((fun f ->
-       let oldf = !r in
-       r := (fun () -> let%lwt () = oldf () in f ())),
-     (fun () -> !r ()))
+    handler_action Lwt.return
 
   (* Call this to add an action to be done just before closing the session *)
   let (on_pre_close_session, pre_close_session_action) =
-    let r = ref (fun _ -> Current.unset () ; Lwt.return_unit) in
-    ((fun f ->
-       let oldf = !r in
-       r := (fun () -> let%lwt () = oldf () in f ())),
-     (fun () -> !r ()))
+    handler_action (fun () -> Current.unset () ; Lwt.return_unit)
 
   (* Call this to add an action to be done just before handling a request *)
   let (on_request, request_action) =
-    let r = ref (fun _ -> Current.unset () ; Lwt.return_unit) in
-    ((fun f ->
-       let oldf = !r in
-       r := (fun () -> let%lwt () = oldf () in f ())),
-     (fun () -> !r ()))
+    handler_action (fun _ -> Current.unset () ; Lwt.return_unit)
 
   (* Call this to add an action to be done just for each denied request *)
-  let ((on_denied_request : (t option -> unit Lwt.t) -> unit)
-      , denied_request_action) =
-    let r = ref (fun _ -> Lwt.return_unit) in
-    ((fun f ->
-       let oldf = !r in
-       r := (fun userid_o -> let%lwt () = oldf userid_o in f userid_o)),
-     (fun userid_o -> !r userid_o))
+  let (on_denied_request, denied_request_action) =
+    handler_action (fun _ -> Lwt.return_unit)
 
   let connect_volatile uid =
     Eliom_state.set_volatile_data_session_group
