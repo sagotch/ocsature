@@ -132,7 +132,7 @@ module Make (In : Make_in) = struct
 
   (* Call this to add an action to be done just for each denied request *)
   let (on_denied_request, denied_request_action) =
-    handler_action (fun _ -> Lwt.return_unit)
+    handler_action (fun (_ : t option) -> Lwt.return_unit)
 
   let connect_volatile uid =
     Eliom_state.set_volatile_data_session_group
